@@ -1,12 +1,12 @@
 # batch_controller.py
+import os
 import logging
 import multiprocessing
 from datetime import datetime
-from pydantic import BaseModel, ValidationError
 from typing import List
 from fastapi import APIRouter, HTTPException
 from models.batch import BatchRequest, BatchResponse
-import os
+
 
 # Get the absolute path to the root directory of the application
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,7 +21,7 @@ logger = logging.getLogger(__name__)
 batch_router = APIRouter()
 
 
-# multiprocess does not support async/await, so we need to use a normal function
+# Multi process does not support async/await, so we need to use a normal function
 @batch_router.post("/add_numbers")
 def add_numbers(numbers: List[int]) -> List[int]:
     """Function to perform addition on a list of integers."""
@@ -33,14 +33,15 @@ async def process_batch(batch: BatchRequest) -> BatchResponse:
     """Function to process batch using multiprocessing pool."""
     # Validate input payload blank or not
     if not batch.payload:
-        raise HTTPException(status_code=400, detail="Payload is empty")  # Update the status code to 400
-    
+        # Update the status code to 400
+        raise HTTPException(status_code=400, detail="Payload is empty")
+
     # Custom validation to check if each element in the payload is an integer
     for sublist in batch.payload:
         for item in sublist:
             if not isinstance(item, int):
-                raise HTTPException(status_code=422, detail=f"Invalid payload: {item} is not an integer")
-    
+                raise HTTPException(
+                    status_code=422, detail=f"Invalid payload: {item} is not an integer")
     try:
         # Start timestamp
         started_at = datetime.now().isoformat()
@@ -68,7 +69,6 @@ async def process_batch(batch: BatchRequest) -> BatchResponse:
         )
     except Exception as e:
         # Log any errors
-        logger.exception("Error processing batch")
+        logger.exception(f"Error processing batch {e}")
         # Raise HTTPException with 500 status code and error message
         raise HTTPException(status_code=500, detail="Internal server error")
-
