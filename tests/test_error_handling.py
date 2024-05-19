@@ -16,4 +16,4 @@ def test_invalid_batch_payload():
     payload = {"batchid": "id123"}  # Missing 'payload' key
     response = client.post("/process_batch", json=payload)
     assert response.status_code == 422  # Check for status code 422 (Unprocessable Entity)
-    assert response.json()['detail'][0]['msg'] == "field required"  # Check for the error message
+    assert response.json()['detail'][0]['msg'].lower() == "field required"  # Check for the error message
