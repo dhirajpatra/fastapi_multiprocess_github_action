@@ -84,3 +84,5 @@ To run and test this FastAPI application along with sample test data, follow the
         ```
 4. **Unit Test**: To run the unit tests run `pytest tests/`
 
+5. **Github Action**: Github action workflow added to make auto build and deploy whenever pushes the code into main.
+
