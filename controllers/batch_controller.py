@@ -19,7 +19,6 @@ logging.basicConfig(filename=log_file)
 logger = logging.getLogger(__name__)
 
 
-# Multi process does not support async/await, so we need to use a normal function
 def add_numbers(numbers: List[int]) -> List[int]:
     """Function to perform addition on a list of integers."""
     return [sum(numbers)]
