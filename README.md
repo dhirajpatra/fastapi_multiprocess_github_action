@@ -86,3 +86,25 @@ To run and test this FastAPI application along with sample test data, follow the
 
 5. **Github Action**: Github action workflow added to make auto build and deploy whenever pushes the code into main.
 
+
+### Regarding async/await with multiprocessing in Python
+
+No, the `multiprocessing` module in Python does not directly support async/await syntax because it operates independently of the asynchronous event loop used by asyncio. When you use `multiprocessing`, each process has its own Python interpreter and event loop, separate from the event loop used by asyncio.
+
+However, you can still use `asyncio` and `multiprocessing` together in a Python application, but you need to manage them separately. Typically, you would use `asyncio` for I/O-bound tasks and `multiprocessing` for CPU-bound tasks.
+
+Here's a high-level overview of how you might use them together:
+
+1. Use `asyncio` for managing I/O-bound tasks that involve waiting for external resources, such as network requests or database queries.
+2. Use `multiprocessing` for parallelizing CPU-bound tasks across multiple processes, such as intensive calculations or computations.
+
+If you have a scenario where you need to use `asyncio` within a multiprocessing context, you can consider using a library like `aiomultiprocess`, which provides integration between asyncio and multiprocessing by allowing you to run asyncio event loops in separate processes. However, this adds complexity to your code and may not be necessary for all use cases.
+
+In this application running without any issues because it's using the asynchronous (`async`) syntax in the router endpoints, but the controller functions (`add_numbers` and `process_batch`) themselves are synchronous.
+
+In this application `batch_router.py`, the router endpoints `add_numbers_endpoint` and `process_batch_endpoint` are defined as asynchronous functions (`async def`). However, within these functions, you're calling the synchronous controller functions `add_numbers` and `process_batch`. This is perfectly valid and will work without any problems.
+
+While the router endpoints are asynchronous, the controller functions can remain synchronous if they don't perform any asynchronous I/O operations or don't need to await any asynchronous tasks.
+
+So, this application is running correctly because it's using the asynchronous syntax in the router endpoints, which allows it to handle requests asynchronously, while still using synchronous controller functions for the actual processing logic. This setup is often used when the processing logic doesn't require asynchronous operations.
+
