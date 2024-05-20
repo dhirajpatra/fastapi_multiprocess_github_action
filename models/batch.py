@@ -1,6 +1,6 @@
 # batch.py
 from typing import List
-from pydantic import BaseModel, validator, ValidationError
+from pydantic import BaseModel, validator
 
 
 # Define the request schema for add_number
@@ -57,4 +57,3 @@ class BatchResponse(BaseModel):
     status: str
     started_at: str
     completed_at: str
-    
