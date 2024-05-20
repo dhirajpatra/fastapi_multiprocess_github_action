@@ -4,7 +4,7 @@ import logging
 import multiprocessing
 from datetime import datetime
 from typing import List
-from fastapi import APIRouter, HTTPException
+from fastapi import HTTPException
 from models.batch import BatchRequest, BatchResponse
 
 
@@ -18,18 +18,14 @@ log_file = os.path.join(root_dir, 'app.log')
 logging.basicConfig(filename=log_file)
 logger = logging.getLogger(__name__)
 
-batch_router = APIRouter()
-
 
 # Multi process does not support async/await, so we need to use a normal function
-@batch_router.post("/add_numbers")
 def add_numbers(numbers: List[int]) -> List[int]:
     """Function to perform addition on a list of integers."""
     return [sum(numbers)]
 
 
-@batch_router.post("/process_batch", response_model=BatchResponse)
-async def process_batch(batch: BatchRequest) -> BatchResponse:
+def process_batch(batch: BatchRequest) -> BatchResponse:
     """Function to process batch using multiprocessing pool."""
     # Validate input payload blank or not
     if not batch.payload:
