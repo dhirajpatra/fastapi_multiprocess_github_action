@@ -14,8 +14,7 @@ root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 log_file = os.path.join(root_dir, 'app.log')
 
 # Configure logging to write logs to the specified log file
-# loglevel decided in log.ini file
-logging.basicConfig(filename=log_file)
+logging.basicConfig(filename=log_file, level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -31,12 +30,6 @@ def process_batch(batch: BatchRequest) -> BatchResponse:
         # Update the status code to 400
         raise HTTPException(status_code=400, detail="Payload is empty")
 
-    # Custom validation to check if each element in the payload is an integer
-    for sublist in batch.payload:
-        for item in sublist:
-            if not isinstance(item, int):
-                raise HTTPException(
-                    status_code=422, detail=f"Invalid payload: {item} is not an integer")
     try:
         # Start timestamp
         started_at = datetime.now().isoformat()
@@ -64,6 +57,7 @@ def process_batch(batch: BatchRequest) -> BatchResponse:
         )
     except Exception as e:
         # Log any errors
-        logger.exception(f"Error processing batch {e}")
+        logger.exception(f"Error processing batch: {e}")
         # Raise HTTPException with 500 status code and error message
         raise HTTPException(status_code=500, detail="Internal server error")
+    
