@@ -1,4 +1,4 @@
-### Python Assignment:
+### Python Project with Github Action:
 
 1. Task is to set up a FastAPI project and create an endpoint with request and response
 validation using Pydantic models.
