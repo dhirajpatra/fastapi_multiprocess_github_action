@@ -24,6 +24,7 @@ logger = logging.getLogger(__name__)
 
 def add_numbers(numbers: List[int]) -> List[int]:
     """Function to perform addition on a list of integers."""
+    logger.info(f"Adding numbers: {numbers}")
     return [sum(numbers)]
 
 
@@ -35,6 +36,7 @@ def process_batch(batch: BatchRequest) -> BatchResponse:
         raise HTTPException(status_code=400, detail="Payload is empty")
 
     try:
+        logger.info(f"Process batch with payload: {batch.payload}")
         # Start timestamp
         started_at = datetime.now().isoformat()
 
@@ -44,7 +46,7 @@ def process_batch(batch: BatchRequest) -> BatchResponse:
         # Perform addition on input lists of integers in parallel
         result = pool.map(add_numbers, batch.payload)
         # result = executor.map(add_numbers, batch.payload)
-
+        logger.info(f"Processed Result: {result}")
         # Close the pool to free resources
         pool.close()
         pool.join()
